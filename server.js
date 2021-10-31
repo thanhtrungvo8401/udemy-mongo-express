@@ -6,7 +6,12 @@ dotenv.config({
     path: "./config/config.env"
 })
 
+// Route files:
+const bootcamps = require("./routes/bootcamps");
+
 const app = express();
+
+app.use('/api/v1/bootcamps', bootcamps);
 
 const PORT = process.env.PORT || 5000;
 
