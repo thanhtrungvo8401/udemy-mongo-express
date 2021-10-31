@@ -1,0 +1,28 @@
+{
+  "name": "express-mongodb",
+  "version": "1.0.0",
+  "description": "Restful API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_ENV=production& node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thanhtrungvo8401/express-mongodb.git"
+  },
+  "author": "trungvt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thanhtrungvo8401/express-mongodb/issues"
+  },
+  "homepage": "https://github.com/thanhtrungvo8401/express-mongodb#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}
