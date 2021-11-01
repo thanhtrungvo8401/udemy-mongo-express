@@ -19,6 +19,9 @@ const { NODE_ENV } = require("./constant");
 
 const app = express();
 
+// Body parser:
+app.use(express.json());
+
 // Dev logging middleware
 if (process.env.NODE_ENV === NODE_ENV.DEV) {
     app.use(morgan('dev'));
