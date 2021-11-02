@@ -2,18 +2,13 @@ const ErrorResponse = require("../utils/errorResponse");
 const { ERROR_MESSAGE, STATUS_CODE, MONGOOSE_ERROR } = require("../constant");
 
 const errorHandler = (err, req, res, next) => {
-  console.log(err.stack.red);
+  console.log(err);
 
   let error = new ErrorResponse(err.message, err.statusCode);
 
   // Mongoose bad ObjectId:
   if (err.name === MONGOOSE_ERROR.BAD_OBJECT_ID) {
     error = new ErrorResponse(`Bootcamp not found with id of ${err.value}`, STATUS_CODE._404);
-  }
-
-  // Mongoose duplicate key
-  if (err.code = MONGOOSE_ERROR.DUPLICATE_CODE) {
-    error = new ErrorResponse('Duplicate field value', STATUS_CODE._400);
   }
 
   // Mongoose validation error:
