@@ -3,16 +3,32 @@ const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const { STATUS_CODE } = require("../constant");
 const asyncHanlder = require("../middleware/async");
+const { query } = require("express");
 
 
 // @Desc Get all bootcamps
 // @route GET /api/v1/bootcamps
 // @access Public
 exports.getBootcamps = asyncHanlder(async (req, res, next) => {
+  // coppy req.query:
+  const reqQuery = { ...req.query };
+  // fields to exclude:
+  const removeFields = ["select"];
+  // Loop over removeFields and delete them from reqQuery:
+  removeFields.forEach(param => delete reqQuery[param])
+  // create query string:
   let queryStr = JSON.stringify(req.query);
-  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
+  // create operators ($gt, $gte, etc..)
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+  // Finding resource:
+  let query = Bootcamp.find(JSON.parse(queryStr));
+  // Select fields:
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    query = query.select(fields);
+  }
 
-  const bootcamps = await Bootcamp.find(JSON.parse(queryStr));
+  const bootcamps = await query;
   res.status(200).json({ success: true, count: bootcamps.length, data: bootcamps });
 });
 
