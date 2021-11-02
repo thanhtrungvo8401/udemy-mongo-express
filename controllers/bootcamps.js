@@ -12,16 +12,20 @@ const { query } = require("express");
 exports.getBootcamps = asyncHanlder(async (req, res, next) => {
   // coppy req.query:
   const reqQuery = { ...req.query };
+
   // fields to exclude:
   const removeFields = ["select"];
   // Loop over removeFields and delete them from reqQuery:
   removeFields.forEach(param => delete reqQuery[param])
+
   // create query string:
   let queryStr = JSON.stringify(req.query);
   // create operators ($gt, $gte, etc..)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
   // Finding resource:
   let query = Bootcamp.find(JSON.parse(queryStr));
+  
   // Select fields:
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
