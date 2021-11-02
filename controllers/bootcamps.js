@@ -2,14 +2,12 @@ const Bootcamp = require("../models/Bootcamp");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const { STATUS_CODE } = require("../constant");
-const asyncHanlder = require("../middleware/async");
-const { query } = require("express");
 
 
 // @Desc Get all bootcamps
 // @route GET /api/v1/bootcamps
 // @access Public
-exports.getBootcamps = asyncHanlder(async (req, res, next) => {
+exports.getBootcamps = asyncHandler(async (req, res, next) => {
   const reqQuery = { ...req.query };
 
   // fields to exclude:
