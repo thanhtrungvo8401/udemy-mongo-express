@@ -13,7 +13,7 @@ exports.getBootcamps = asyncHanlder(async (req, res, next) => {
   const reqQuery = { ...req.query };
 
   // fields to exclude:
-  const removeFields = ["select", "sort"];
+  const removeFields = ["select", "sort", "page", "limit"];
   removeFields.forEach(param => delete reqQuery[param])
 
   // create operators ($gt, $gte, etc..)
@@ -23,7 +23,7 @@ exports.getBootcamps = asyncHanlder(async (req, res, next) => {
   // FETCH DATA:
   let query = Bootcamp.find(JSON.parse(queryStr));
 
-  // SELECT, SORT:
+  // SELECT, SORT, PAGINATION:
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
     query = query.select(fields);
@@ -34,9 +34,24 @@ exports.getBootcamps = asyncHanlder(async (req, res, next) => {
   } else {
     query = query.sort("-createdAt")
   }
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const startInd = (page - 1) * limit;
+  const endInd = page * limit;
+  const total = await Bootcamp.countDocuments();
+
+  query = query.skip(startInd).limit(limit);
 
   const bootcamps = await query;
-  res.status(200).json({ success: true, count: bootcamps.length, data: bootcamps });
+  // Pagination result:
+  const pagination = {};
+  if (endInd < total) {
+    pagination.next = { page: page + 1, limit }
+  }
+  if (startInd > 0) {
+    pagination.prev = { page: page - 1, limit }
+  }
+  res.status(200).json({ success: true, count: bootcamps.length, pagination, data: bootcamps });
 });
 
 // @Desc Get a bootcamp
